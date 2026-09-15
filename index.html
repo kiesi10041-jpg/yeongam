@@ -60,7 +60,7 @@
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; 
             border: 1px solid var(--border-color); 
         }
-        .search-filter { display: flex; gap: 6px; flex: 1; min-width: 220px; }
+        .search-filter { display: flex; gap: 6px; flex: 1; min-width: 220px; align-items: center; }
         input[type="text"], input[type="datetime-local"], select, textarea { 
             padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-family: inherit;
         }
@@ -152,8 +152,8 @@
         .modal-card { background: white; width: 100%; max-width: 480px; border-radius: 12px; padding: 18px; position: relative; max-height: 85vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; cursor: pointer; color: #a0aec0; }
 
-        /* 로딩 뱃지 */
-        #syncBadge { display: none; font-size: 0.72rem; color: #2b6cb0; font-weight: bold; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; }
+        /* 상태 뱃지 */
+        #syncBadge { display: none; font-size: 0.72rem; color: #2b6cb0; font-weight: bold; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
 
         @media (max-width: 768px) {
             body { padding: 8px; }
@@ -203,7 +203,7 @@
                 <option value="진행">진행중</option>
                 <option value="완료">완료</option>
             </select>
-            <span id="syncBadge">🔄 실시간 동기화중...</span>
+            <span id="syncBadge">🔄 데이터 동기화 중...</span>
         </div>
 
         <!-- 관리자 전용 제어부 -->
@@ -268,26 +268,23 @@
 </div>
 
 <script>
-    // 🔒 1. F12 개발자 도구 및 소스검사 단축키 완벽 차단
+    // 🔒 1. F12 개발자 도구 및 소스검사 단축키 차단
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         return false;
     });
 
     document.addEventListener('keydown', function(e) {
-        // F12 차단
         if (e.key === 'F12' || e.keyCode === 123) {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        // Ctrl+Shift+I / J / C (개발자 도구 단축키) 차단
         if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        // Ctrl+U (소스 보기) 차단
         if (e.ctrlKey && ['U', 'u', 'S', 's'].includes(e.key)) {
             e.preventDefault();
             e.stopPropagation();
@@ -295,8 +292,8 @@
         }
     });
 
-    // 🌐 2. 구글 스프레드시트 배포 Web App URL 연동
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxsj09a1sUfmrUaZ3AU0uuQu3S2KaIWKWYRB43Z9q6DLKsLHEFwo0GHXmj2_qw4A3_sA/exec";
+    // 🌐 2. 최신 구글 Apps Script Web App URL 연동
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwkmvmGVeIrn2-nBc0Y2DKN4HEi_xvVouXl9EQBENsCNK5G0C_9w_ADvYYz_ZNr34yXg/exec";
     const ADMIN_PASSWORD = "yeongam2026";
 
     let isAdmin = false;
@@ -311,75 +308,47 @@
         "2026-10-09": "한글날", "2026-12-25": "성탄절"
     };
 
-    // 기본 로컬 데이터
-    let proj1Companies = [
-        { id: 1, name: "중원회관", owner: "김대표", phone: "061-470-0001", address: "전남 영암군 영암읍 서남리 12-3", mainDish: "갈낙탕, 짱뚱어탕", photoShoot: "완료", smartPlace: "완료", posterStatus: "시안완료(인쇄중)", influencer: "포스팅완료(1/6)", consultStatus: "완료", consultDate: "2026-09-03T14:00", consultant: "심훈 팀장", notes: "영암 읍내 갈낙탕 원조, 플레이스 키워드 세팅 완료" },
-        { id: 2, name: "청하식당", owner: "이대표", phone: "061-470-0002", address: "전남 영암군 학산면 독천리 45-6", mainDish: "갈낙탕, 낙지볶음", photoShoot: "완료", smartPlace: "진행", posterStatus: "촬영사진선정", influencer: "일정협의중", consultStatus: "진행", consultDate: "2026-09-10T11:00", consultant: "심훈 팀장", notes: "독천 낙지거리 내 위치, 40년 전통 문구 포스터 강조 희망" },
-        { id: 3, name: "영암한우명가", owner: "박대표", phone: "061-470-0003", address: "전남 영암군 삼호읍 용앙리 78-9", mainDish: "영암매력한우구이", photoShoot: "예정", smartPlace: "대기", posterStatus: "대기", influencer: "대기", consultStatus: "예정", consultDate: "2026-09-17T15:00", consultant: "전문위원", notes: "대형 매장, 선물세트 택배 배송 플레이스 홍보 연계" },
-        { id: 4, name: "월출산이야기", owner: "최대표", phone: "061-470-0004", address: "전남 영암군 군서면 도갑리 10-1", mainDish: "도토리묵밥, 산채정식", photoShoot: "완료", smartPlace: "완료", posterStatus: "납품완료", influencer: "포스팅완료(2/6)", consultStatus: "완료", consultDate: "2026-09-08T10:30", consultant: "심훈 팀장", notes: "도갑사/국립공원 입구 위치, 포스터 2종 매장 부착 완료" },
-        { id: 5, name: "독천낙지마당", owner: "정대표", phone: "061-470-0005", address: "전남 영암군 학산면 독천리 22-1", mainDish: "낙지구이, 연포탕", photoShoot: "진행", smartPlace: "진행", posterStatus: "시안제작중", influencer: "방문예정(9/20)", consultStatus: "진행", consultDate: "2026-09-18T14:00", consultant: "심훈 팀장", notes: "포스터 대표메뉴 2종 선정 완료, 무화과 연계 찬류 부각" },
-        { id: 6, name: "기찬메밀", owner: "오대표", phone: "061-470-0006", address: "전남 영암군 영암읍 회문리 33-4", mainDish: "메밀막국수, 전병", photoShoot: "완료", smartPlace: "완료", posterStatus: "인쇄대기", influencer: "포스팅완료(3/6)", consultStatus: "완료", consultDate: "2026-09-04T16:00", consultant: "심훈 팀장", notes: "기찬묏길 산책로 인근, 영수증 리뷰 이벤트 세팅 완료" },
-        { id: 7, name: "월출골순두부", owner: "강대표", phone: "061-470-0007", address: "전남 영암군 신북면 이천리 55-6", mainDish: "가마솥손두부찌개", photoShoot: "예정", smartPlace: "대기", posterStatus: "대기", influencer: "대기", consultStatus: "예정", consultDate: "2026-09-22T11:00", consultant: "심훈 팀장", notes: "로컬 콩 사용 강조 문구 요청" },
-        { id: 8, name: "삼호오리마을", owner: "조대표", phone: "061-470-0008", address: "전남 영암군 삼호읍 나불리 99-1", mainDish: "생오리로스, 주물럭", photoShoot: "완료", smartPlace: "진행", posterStatus: "시안수정", influencer: "대기", consultStatus: "진행", consultDate: "2026-09-15T13:30", consultant: "전문위원", notes: "인근 직장인 회식 타깃 스마트플레이스 검색 키워드 보강" },
-        { id: 9, name: "달빛한옥카페", owner: "윤대표", phone: "061-470-0009", address: "전남 영암군 군서면 왕인로 100", mainDish: "무화과라떼, 수제디저트", photoShoot: "완료", smartPlace: "완료", posterStatus: "납품완료", influencer: "포스팅완료(4/6)", consultStatus: "완료", consultDate: "2026-09-07T14:00", consultant: "심훈 팀장", notes: "인스타 감성 촬영 사진 납품 완료, 릴스 홍보 반응 우수" },
-        { id: 10, name: "영암갯마을", owner: "장대표", phone: "061-470-0010", address: "전남 영암군 미암면 춘동리 14-2", mainDish: "장어구이, 남도백반", photoShoot: "예정", smartPlace: "대기", posterStatus: "대기", influencer: "대기", consultStatus: "예정", consultDate: "2026-09-23T14:00", consultant: "심훈 팀장", notes: "대표님 고령으로 1:1 방문 시 스마트폰 네이버 관리 지도" },
-        { id: 11, name: "신북기사식당", owner: "임대표", phone: "061-470-0011", address: "전남 영암군 신북면 월평리 88-1", mainDish: "남도백반, 제육볶음", photoShoot: "완료", smartPlace: "진행", posterStatus: "시안완료", influencer: "대기", consultStatus: "진행", consultDate: "2026-09-16T10:00", consultant: "전문위원", notes: "가성비 백반 상차림 부각 항공샷 촬영 완료" },
-        { id: 12, name: "월출산산새소리", owner: "한대표", phone: "061-470-0012", address: "전남 영암군 영암읍 개신리 77-3", mainDish: "닭볶음탕, 한방백숙", photoShoot: "완료", smartPlace: "진행", posterStatus: "인쇄대기", influencer: "방문예정(9/21)", consultStatus: "진행", consultDate: "2026-09-14T15:00", consultant: "심훈 팀장", notes: "조리시간 감안한 사전 전화예약 링크 플레이스 연동" },
-        { id: 13, name: "영암다원식당", owner: "송대표", phone: "061-470-0013", address: "전남 영암군 덕진면 백계리 62-1", mainDish: "녹차오리훈제, 비빔밥", photoShoot: "예정", smartPlace: "대기", posterStatus: "대기", influencer: "대기", consultStatus: "예정", consultDate: "2026-09-24T11:00", consultant: "심훈 팀장", notes: "덕진 차밭 인근 특화점, 포스터 디자인 컨셉 조율 필요" }
-    ];
+    let proj1Companies = [];
+    let proj2Companies = [];
+    let ganttData1 = [];
+    let ganttData2 = [];
 
-    let proj2Companies = [
-        { id: 101, name: "영암달빛농원", owner: "나대표", phone: "061-470-0101", address: "전남 영암군 삼호읍 난전리 11", mainDish: "영암 무화과", devStatus: "레시피완료", promoStatus: "패키지디자인완료", consultStatus: "완료", consultDate: "2026-09-09T14:00", consultant: "디자인/메뉴팀", notes: "무화과 양갱 지함 박스 칼선 감리 및 시제품 인쇄 대기" },
-        { id: 102, name: "월출산대봉감조합", owner: "배대표", phone: "061-470-0102", address: "전남 영암군 금정면 용흥리 22", mainDish: "금정 대봉감", devStatus: "메뉴테스트중", promoStatus: "라벨·리플렛제작중", consultStatus: "진행", consultDate: "2026-09-19T10:30", consultant: "디자인/메뉴팀", notes: "대봉감 가공음료 병 라벨 및 홍보 띠지 디자인 중점 지원" },
-        { id: 103, name: "기찬메밀연구소", owner: "황대표", phone: "061-470-0103", address: "전남 영암군 영암읍 남풍리 33", mainDish: "영암 메밀", devStatus: "시제품완료", promoStatus: "박스패키지인쇄중", consultStatus: "진행", consultDate: "2026-09-21T15:00", consultant: "디자인/메뉴팀", notes: "로컬 직매장 및 온라인 유통용 규격 파우치 디자인 완료" },
-        { id: 104, name: "영암황토식품", owner: "문대표", phone: "061-470-0104", address: "전남 영암군 미암면 호포리 44", mainDish: "미암 황토고구마", devStatus: "레시피확정", promoStatus: "홍보영상·카드뉴스", consultStatus: "예정", consultDate: "2026-09-25T14:00", consultant: "마케팅팀", notes: "고구마 말랭이 신규 디저트 온라인 상세페이지 제작 지원" }
-    ];
-
-    let ganttData1 = [
-        { id: 1, task: "1. 대상업소 기초자료 및 현장 진단", spec: "13개소 전업소", progress: 100, status: "완료" },
-        { id: 2, task: "2. 전문 출장 사진촬영 (대표메뉴·매장)", spec: "13개소 전업소", progress: 75, status: "진행" },
-        { id: 3, task: "3. 스마트플레이스 최적화(SEO)", spec: "13개소 전업소", progress: 60, status: "진행" },
-        { id: 4, task: "4. 네이버 인플루언서 릴레이 홍보", spec: "총 6회 포스팅", progress: 66, status: "진행" },
-        { id: 5, task: "5. 홍보 포스터 디자인 및 인쇄납품", spec: "총 26매 (소당 2매)", progress: 50, status: "진행" },
-        { id: 6, task: "6. 1:1 현장 코칭 및 매뉴얼 교부", spec: "13개소 전업소", progress: 60, status: "진행" }
-    ];
-
-    let ganttData2 = [
-        { id: 1, task: "1. 농특산물 활용 메뉴·레시피 개발", spec: "표준 레시피 카드", progress: 90, status: "완료" },
-        { id: 2, task: "2. 패키지 및 홍보물 제작 (★메인)", spec: "포장박스/라벨/리플렛", progress: 70, status: "진행" },
-        { id: 3, task: "3. 경영체 현장 맞춤 지원", spec: "현장 일지", progress: 50, status: "진행" }
-    ];
-
-    // 구글 시트 데이터 로드
+    // 구글 시트 데이터 로드 (캐시 무효화 타임스탬프 적용)
     async function loadDataFromSheet() {
         const badge = document.getElementById('syncBadge');
-        if (badge) badge.style.display = 'inline-block';
+        if (badge) {
+            badge.innerText = "🔄 구글 시트 불러오는 중...";
+            badge.style.display = 'inline-block';
+        }
         try {
-            const res = await fetch(GOOGLE_SCRIPT_URL);
+            const cacheBuster = GOOGLE_SCRIPT_URL + "?t=" + new Date().getTime();
+            const res = await fetch(cacheBuster);
             const data = await res.json();
-            if (data.proj1 && data.proj1.length > 0) proj1Companies = data.proj1;
-            if (data.proj2 && data.proj2.length > 0) proj2Companies = data.proj2;
-            if (data.gantt1 && data.gantt1.length > 0) ganttData1 = data.gantt1;
-            if (data.gantt2 && data.gantt2.length > 0) ganttData2 = data.gantt2;
+
+            if (data.proj1) proj1Companies = data.proj1;
+            if (data.proj2) proj2Companies = data.proj2;
+            if (data.gantt1) ganttData1 = data.gantt1;
+            if (data.gantt2) ganttData2 = data.gantt2;
             
             renderStats();
             renderCards();
             renderCalendar();
             renderGantt();
         } catch (err) {
-            console.warn("구글 시트 연동 실패, 기본 데이터 유지:", err);
+            console.warn("구글 시트 연동 실패:", err);
         } finally {
             if (badge) badge.style.display = 'none';
         }
     }
 
-    // 구글 시트로 데이터 저장
+    // 구글 시트로 데이터 저장 (text/plain 전송으로 CORS 우회)
     async function syncToGoogleSheet() {
         const badge = document.getElementById('syncBadge');
         if (badge) {
-            badge.innerText = "☁️ 시트 저장중...";
+            badge.innerText = "☁️ 시트에 저장 중...";
             badge.style.display = 'inline-block';
         }
+
         const payload = {
             proj1: proj1Companies,
             proj2: proj2Companies,
@@ -390,19 +359,17 @@
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
                 body: JSON.stringify(payload)
             });
         } catch (err) {
-            console.error("구글 시트 전송 에러:", err);
+            console.error("구글 시트 전송 오류:", err);
         } finally {
             setTimeout(() => {
-                if (badge) {
-                    badge.innerText = "🔄 실시간 동기화중...";
-                    badge.style.display = 'none';
-                }
-            }, 1000);
+                if (badge) badge.style.display = 'none';
+            }, 800);
         }
     }
 
@@ -411,7 +378,7 @@
         alert("구글 스프레드시트에 실시간 동기화 요청을 전송했습니다.");
     }
 
-    // 관리자 모드 제어
+    // 관리자 모드 검증
     function checkAdminAuth() {
         const urlParams = new URLSearchParams(window.location.search);
         const adminKey = urlParams.get('admin');
@@ -533,14 +500,14 @@
                     <div class="card-detail" id="detail-${idx}">
                         ${isAdmin ? `
                             <div class="form-grid-2">
-                                <div class="form-row"><label>업체명</label><input type="text" id="f-name-${idx}" value="${c.name}"></div>
-                                <div class="form-row"><label>주력 메뉴</label><input type="text" id="f-dish-${idx}" value="${c.mainDish}"></div>
+                                <div class="form-row"><label>업체명</label><input type="text" id="f-name-${idx}" value="${c.name || ''}"></div>
+                                <div class="form-row"><label>주력 메뉴</label><input type="text" id="f-dish-${idx}" value="${c.mainDish || ''}"></div>
                             </div>
                             <div class="form-grid-2">
-                                <div class="form-row"><label>대표자</label><input type="text" id="f-owner-${idx}" value="${c.owner}"></div>
-                                <div class="form-row"><label>연락처</label><input type="text" id="f-phone-${idx}" value="${c.phone}"></div>
+                                <div class="form-row"><label>대표자</label><input type="text" id="f-owner-${idx}" value="${c.owner || ''}"></div>
+                                <div class="form-row"><label>연락처</label><input type="text" id="f-phone-${idx}" value="${c.phone || ''}"></div>
                             </div>
-                            <div class="form-row"><label>사업장 주소</label><input type="text" id="f-addr-${idx}" value="${c.address}"></div>
+                            <div class="form-row"><label>사업장 주소</label><input type="text" id="f-addr-${idx}" value="${c.address || ''}"></div>
                             <div class="req-box">
                                 <label>📌 현장 요구사항 & 주무관 공유 메모</label>
                                 <textarea id="f-notes-${idx}" rows="2" style="width:100%;">${c.notes || ''}</textarea>
@@ -635,14 +602,14 @@
                     <div class="card-detail" id="detail-${idx}">
                         ${isAdmin ? `
                             <div class="form-grid-2">
-                                <div class="form-row"><label>경영체명</label><input type="text" id="f2-name-${idx}" value="${c.name}"></div>
-                                <div class="form-row"><label>활용 농특산물</label><input type="text" id="f2-dish-${idx}" value="${c.mainDish}"></div>
+                                <div class="form-row"><label>경영체명</label><input type="text" id="f2-name-${idx}" value="${c.name || ''}"></div>
+                                <div class="form-row"><label>활용 농특산물</label><input type="text" id="f2-dish-${idx}" value="${c.mainDish || ''}"></div>
                             </div>
                             <div class="form-grid-2">
-                                <div class="form-row"><label>대표자</label><input type="text" id="f2-owner-${idx}" value="${c.owner}"></div>
-                                <div class="form-row"><label>연락처</label><input type="text" id="f2-phone-${idx}" value="${c.phone}"></div>
+                                <div class="form-row"><label>대표자</label><input type="text" id="f2-owner-${idx}" value="${c.owner || ''}"></div>
+                                <div class="form-row"><label>연락처</label><input type="text" id="f2-phone-${idx}" value="${c.phone || ''}"></div>
                             </div>
-                            <div class="form-row"><label>사업장 주소</label><input type="text" id="f2-addr-${idx}" value="${c.address}"></div>
+                            <div class="form-row"><label>사업장 주소</label><input type="text" id="f2-addr-${idx}" value="${c.address || ''}"></div>
                             <div class="req-box">
                                 <label>📌 핵심 과업 내용 & 홍보물 제작 메모</label>
                                 <textarea id="f2-notes-${idx}" rows="2" style="width:100%;">${c.notes || ''}</textarea>
@@ -676,7 +643,7 @@
                         ` : `
                             <div class="req-box">
                                 <strong>📌 핵심 과업 내용 (홍보물 개발 집중):</strong><br>
-                                ${c.notes}
+                                ${c.notes || '특이사항 없음'}
                             </div>
                             <div class="tasks-grid">
                                 <div class="task-item-box">
@@ -992,11 +959,7 @@
 
     window.onload = function() {
         checkAdminAuth();
-        renderStats();
-        renderCards();
-        renderCalendar();
-        renderGantt();
-        loadDataFromSheet(); // 구글 시트 최신 데이터 자동 가져오기
+        loadDataFromSheet();
     };
 </script>
 </body>
