@@ -39,16 +39,18 @@
         .header-title p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
         .client-badge { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.25); }
 
+        /* 상단 과업 탭 영역 */
         .project-selector { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
         .proj-btn { 
-            flex: 1; min-width: 150px; background: rgba(255, 255, 255, 0.15); color: #edf2f7; 
+            flex: 1; min-width: 140px; background: rgba(255, 255, 255, 0.15); color: #edf2f7; 
             border: 1px solid rgba(255, 255, 255, 0.25); padding: 10px 12px; border-radius: 8px; 
             cursor: pointer; font-weight: 700; font-size: 0.82rem; text-align: center; transition: 0.2s;
         }
         .proj-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
+        .proj-btn.is-done { background: #475569; opacity: 0.85; border-color: #64748b; }
         .proj-btn.dimmed { opacity: 0.5; border-style: dashed; }
         .add-proj-btn { background: #38a169; border-color: #38a169; flex: 0.3; min-width: 110px; color: white; }
-        .setting-proj-btn { background: transparent; border: 1px solid #cbd5e1; color: white; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+        .setting-proj-btn { background: transparent; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
 
         .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; }
         .stat-card { background: rgba(255, 255, 255, 0.12); padding: 8px 6px; border-radius: 8px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.15); }
@@ -84,7 +86,7 @@
         .company-cards-list { display: flex; flex-direction: column; gap: 10px; }
         .accordion-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; transition: 0.2s; }
         
-        /* 완료된 카드 스타일: 음영 처리 및 취소선 */
+        /* 완료된 카드: 음영 처리 및 취소선 */
         .accordion-card.is-completed { background: var(--done-bg); opacity: 0.82; border-color: #cbd5e1; }
         .accordion-card.is-completed h3 { text-decoration: line-through; color: var(--done-text); }
         .badge-done { background: #475569; color: white; font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 6px; text-decoration: none !important; display: inline-block; }
@@ -141,10 +143,6 @@
         .mobile-date-group { background: #ffffff; border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; }
         .mobile-date-header { font-weight: 800; font-size: 0.9rem; color: var(--primary-color); padding-bottom: 6px; border-bottom: 1.5px solid #edf2f7; margin-bottom: 8px; display: flex; justify-content: space-between; }
 
-        .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center; padding: 14px; }
-        .modal-card { background: white; width: 100%; max-width: 480px; border-radius: 12px; padding: 18px; position: relative; max-height: 85vh; overflow-y: auto; }
-        .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; cursor: pointer; color: #a0aec0; }
-
         #syncBadge { display: none; font-size: 0.72rem; color: #2b6cb0; font-weight: bold; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
 
         @media (max-width: 768px) {
@@ -174,6 +172,7 @@
             <div class="client-badge">🏛️ 영암군청 발주 사업</div>
         </div>
 
+        <!-- 과업 탭 영역 (상시 보장) -->
         <div id="projectTabs" class="project-selector"></div>
         <div class="stats-container" id="statsBar"></div>
     </header>
@@ -210,12 +209,10 @@
         <button class="tab-btn" onclick="switchTab('calendar-view', this)">📅 현장방문 스케줄러</button>
     </div>
 
-    <!-- 1. 카드 뷰 -->
     <div id="cards-view" class="tab-content active">
         <div class="company-cards-list" id="cardsContainer"></div>
     </div>
 
-    <!-- 2. 달력 뷰 -->
     <div id="calendar-view" class="tab-content">
         <div class="calendar-container">
             <div class="calendar-header">
@@ -238,15 +235,8 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="eventModal">
-    <div class="modal-card">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-        <div id="modalContent"></div>
-    </div>
-</div>
-
 <script>
-    // 🔒 F12 및 소스 검사 단축키 차단
+    // 🔒 F12 및 우클릭 보안 차단
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
         if (e.key === 'F12' || e.keyCode === 123 || 
@@ -256,15 +246,19 @@
         }
     });
 
-    // 🌐 버전 5 Apps Script Web App URL 연동
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_o2ekT0chZ4ZP5rLlYk_C32rG3AKmi1n-6w8LUTRo4B5EbdLjRFsjcn-2NOnQmmnDTg/exec";
     const ADMIN_PASSWORD = "yeongam2026";
 
     let isAdmin = false;
-    let projects = [];
+
+    // ★ 화면 깨짐 방지: 상시 기본 과업 탭 100% 보장
+    let projects = [
+        { id: 1, name: "대표맛집", isVisible: true, isDone: false },
+        { id: 2, name: "농특산물", isVisible: true, isDone: false }
+    ];
     let companies = [];
     let currentProject = 1;
-    let currentDate = new Date(2026, 8, 1); // 2026년 9월 기본
+    let currentDate = new Date(2026, 8, 1);
 
     const koreanHolidays = {
         "2026-01-01": "신정", "2026-02-16": "설날연휴", "2026-02-17": "설날", "2026-02-18": "설날연휴",
@@ -274,28 +268,31 @@
         "2026-10-09": "한글날", "2026-12-25": "성탄절"
     };
 
-    // [GET: 시트 데이터 호출]
+    // [GET: 시트 데이터 동기화]
     async function loadDataFromSheet() {
         showBadge("🔄 구글 시트 불러오는 중...");
         try {
             const res = await fetch(GOOGLE_SCRIPT_URL + "?t=" + new Date().getTime());
             const data = await res.json();
 
-            if (data.projects) projects = data.projects;
-            if (data.companies) companies = data.companies;
-
-            if (projects.length > 0 && !projects.find(p => p.id === currentProject)) {
-                currentProject = projects[0].id;
+            if (data.projects && data.projects.length > 0) {
+                projects = data.projects;
+            }
+            if (data.companies) {
+                companies = data.companies;
             }
 
+            if (!projects.find(p => p.id === currentProject)) {
+                currentProject = projects[0].id;
+            }
+        } catch (err) {
+            console.warn("시트 로드 딜레이 (기본값 유지):", err);
+        } finally {
+            hideBadge();
             renderProjectTabs();
             renderStats();
             renderCards();
             renderCalendar();
-        } catch (err) {
-            console.error("로드 오류:", err);
-        } finally {
-            hideBadge();
         }
     }
 
@@ -327,7 +324,7 @@
 
     function manualSync() {
         syncToGoogleSheet();
-        alert("구글 시트에 즉시 동기화되었습니다.");
+        alert("구글 스프레드시트에 즉시 동기화되었습니다.");
     }
 
     function checkAdminAuth() {
@@ -355,17 +352,25 @@
         window.location.href = window.location.pathname;
     }
 
+    // 상단 과업 탭 렌더링
     function renderProjectTabs() {
         const container = document.getElementById('projectTabs');
+        if (!container) return;
         container.innerHTML = '';
 
         projects.forEach(p => {
-            if (!isAdmin && !p.isVisible) return; // 주무관(게스트) 화면에서는 숨김 처리된 과업 미노출
+            if (!isAdmin && !p.isVisible) return; // 주무관 모드에서는 숨겨진 과업 제외
 
             const btn = document.createElement('button');
-            btn.className = `proj-btn ${currentProject === p.id ? 'active' : ''} ${!p.isVisible ? 'dimmed' : ''}`;
-            btn.innerHTML = `${p.name} ${!p.isVisible ? ' 🙈(숨김)' : ''}`;
-            btn.onclick = () => { currentProject = p.id; renderProjectTabs(); renderStats(); renderCards(); renderCalendar(); };
+            btn.className = `proj-btn ${currentProject === p.id ? 'active' : ''} ${p.isDone ? 'is-done' : ''} ${!p.isVisible ? 'dimmed' : ''}`;
+            btn.innerHTML = `📁 ${p.name} ${p.isDone ? ' [완료]' : ''} ${isAdmin && !p.isVisible ? ' 🙈(숨김)' : ''}`;
+            btn.onclick = () => {
+                currentProject = p.id;
+                renderProjectTabs();
+                renderStats();
+                renderCards();
+                renderCalendar();
+            };
             container.appendChild(btn);
         });
 
@@ -384,11 +389,12 @@
         }
     }
 
+    // 과업 추가 (구글 시트에 탭 자동 생성)
     function addNewProject() {
-        const name = prompt("새로운 과업 탭 이름을 입력하세요:\n(입력 즉시 구글 시트에도 동일한 이름의 탭이 자동 생성됩니다)");
-        if (name) {
+        const name = prompt("새로운 과업 이름을 입력하세요:\n(입력 즉시 상단 탭 및 구글 시트에 동일한 이름의 탭이 생성됩니다)");
+        if (name && name.trim()) {
             const newId = Date.now();
-            projects.push({ id: newId, name: name.trim(), isVisible: true });
+            projects.push({ id: newId, name: name.trim(), isVisible: true, isDone: false });
             currentProject = newId;
             renderProjectTabs();
             renderStats();
@@ -398,22 +404,38 @@
         }
     }
 
+    // 과업 완료, 숨김/노출, 삭제 제어
     function manageCurrentProject() {
         const p = projects.find(x => x.id === currentProject);
         if (!p) return;
-        const act = prompt(`[${p.name}] 과업 설정\n1. 과업 이름 변경\n2. ${p.isVisible ? '주무관 화면에서 숨기기' : '주무관 화면에 노출하기'}\n3. 과업 및 포함된 업체 전체 삭제\n\n원하는 번호를 입력하세요:`);
+        const msg = `[${p.name}] 과업 설정 관리\n\n` +
+                    `1. 과업 이름 변경\n` +
+                    `2. ${p.isVisible ? '주무관 화면에서 숨기기' : '주무관 화면에 노출하기'}\n` +
+                    `3. ${p.isDone ? '과업 진행중으로 변경' : '과업 완료 처리 (완료 뱃지 및 회색 표시)'}\n` +
+                    `4. 과업 삭제 (포함된 업체 데이터 일괄 정리)\n\n` +
+                    `원하는 작업 번호를 입력하세요:`;
+        
+        const act = prompt(msg);
         if (act === '1') {
             const nn = prompt("새 과업 이름을 입력하세요:", p.name);
-            if (nn) { p.name = nn.trim(); renderProjectTabs(); syncToGoogleSheet(); }
+            if (nn && nn.trim()) { p.name = nn.trim(); renderProjectTabs(); syncToGoogleSheet(); }
         } else if (act === '2') {
             p.isVisible = !p.isVisible;
-            alert(p.isVisible ? "주무관(게스트) 화면에 정상 노출됩니다." : "주무관 화면에서 숨김 처리되었습니다.");
+            alert(p.isVisible ? "주무관 화면에 노출됩니다." : "주무관 화면에서 숨김 처리되었습니다.");
             renderProjectTabs(); syncToGoogleSheet();
         } else if (act === '3') {
-            if (confirm(`정말 [${p.name}] 과업을 삭제하시겠습니까?\n구글 시트의 해당 탭 내용도 함께 정리됩니다.`)) {
+            p.isDone = !p.isDone;
+            alert(p.isDone ? "과업이 완료 처리되었습니다." : "과업이 진행중 상태로 변경되었습니다.");
+            renderProjectTabs(); syncToGoogleSheet();
+        } else if (act === '4') {
+            if (projects.length <= 1) {
+                alert("최소 1개의 과업은 유지되어야 합니다.");
+                return;
+            }
+            if (confirm(`정말 [${p.name}] 과업을 삭제하시겠습니까?\n구글 시트에서도 해당 탭의 내용이 삭제됩니다.`)) {
                 projects = projects.filter(x => x.id !== currentProject);
                 companies = companies.filter(x => x.projectId !== currentProject);
-                currentProject = projects.length > 0 ? projects[0].id : null;
+                currentProject = projects[0].id;
                 renderProjectTabs(); renderStats(); renderCards(); renderCalendar(); syncToGoogleSheet();
             }
         }
@@ -432,7 +454,7 @@
             <div class="stat-card"><div class="num">${total}개소</div><div class="label">전체 대상업체</div></div>
             <div class="stat-card"><div class="num">${photoDone}/${total}</div><div class="label">사진/개발</div></div>
             <div class="stat-card"><div class="num">${placeDone}/${total}</div><div class="label">스마트플레이스</div></div>
-            <div class="stat-card"><div class="num">${posterDone}/${total}</div><div class="label">포스터/홍보물</div></div>
+            <div class="stat-card"><div class="num">${posterDone}/${total}</div><div class="label">홍보물제작</div></div>
             <div class="stat-card"><div class="num">${consultDone}/${total}</div><div class="label">컨설팅완료</div></div>
         `;
     }
@@ -444,7 +466,7 @@
         let list = companies.filter(c => c.projectId === currentProject);
         if (!isAdmin) list = list.filter(c => c.isVisible !== false);
 
-        // 과업 완료된 업체는 자동으로 하단 정렬
+        // 완료된 업체는 자동으로 하단 정렬
         list.sort((a, b) => (a.isCompleted === b.isCompleted) ? 0 : a.isCompleted ? 1 : -1);
 
         if (list.length === 0) {
@@ -548,12 +570,12 @@
         }
     }
 
-    // 팝업 없이 즉시 하단에 입력 폼 생성
+    // 팝업 없이 즉시 하단에 입력 카드 생성
     function addNewCompany() {
         const newId = Date.now();
         companies.push({
             id: newId, projectId: currentProject, name: "", owner: "", phone: "", storePhone: "",
-            address: "", mainDish: "", photoShoot: "대기", smartPlace: "대기", posterStatus: "대기",
+            address: "전남 영암군", mainDish: "", photoShoot: "대기", smartPlace: "대기", posterStatus: "대기",
             consultStatus: "예정", consultDate: "", consultant: "심훈 팀장", notes: "",
             isCompleted: false, isVisible: true, isEditing: true
         });
@@ -570,6 +592,7 @@
     function saveCompany(id) {
         const c = companies.find(x => x.id === id);
         if (!c) return;
+
         c.isCompleted = document.getElementById(`f-comp-${id}`).checked;
         c.isVisible = document.getElementById(`f-vis-${id}`).checked;
         c.name = document.getElementById(`f-name-${id}`).value.trim();
@@ -586,7 +609,7 @@
         c.consultDate = document.getElementById(`f-cdate-${id}`).value;
         c.consultant = document.getElementById(`f-cmgr-${id}`).value.trim();
         c.isEditing = false;
-        
+
         renderStats();
         renderCards();
         renderCalendar();
@@ -596,7 +619,7 @@
 
     function deleteSingle(id) {
         const c = companies.find(x => x.id === id);
-        if (confirm(`[${c.name || '선택한 업체'}]를 삭제하시겠습니까?`)) {
+        if (confirm(`[${c.name || '해당 업체'}]를 삭제하시겠습니까? 구글 시트에서도 즉시 삭제됩니다.`)) {
             companies = companies.filter(x => x.id !== id);
             renderStats(); renderCards(); renderCalendar(); syncToGoogleSheet();
         }
@@ -627,7 +650,7 @@
 
         const idsToDelete = Array.from(chks).map(c => parseInt(c.getAttribute('data-id')));
         companies = companies.filter(x => !idsToDelete.includes(x.id));
-        
+
         document.getElementById('selectAllChk').checked = false;
         updateSelectedCount();
         renderStats();
@@ -636,7 +659,6 @@
         syncToGoogleSheet();
     }
 
-    // 달력 스케줄러 렌더링
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
@@ -684,7 +706,6 @@
                 const card = document.createElement('div');
                 card.className = `event-card status-${ev.consultStatus}`;
                 card.innerHTML = `<strong>${time}</strong> ${ev.name}`;
-                card.onclick = () => showEventModal(ev);
                 dayDiv.appendChild(card);
             });
 
@@ -699,7 +720,7 @@
                     const time = ev.consultDate.split('T')[1] || '';
                     const contactNum = ev.storePhone || ev.phone || '연락처 미등록';
                     evHtml += `
-                        <div class="event-card status-${ev.consultStatus}" onclick='showEventModal(${JSON.stringify(ev)})' style="padding:10px; margin-top:6px;">
+                        <div class="event-card status-${ev.consultStatus}" style="padding:10px; margin-top:6px;">
                             <div style="font-weight:bold; color:var(--primary-color);">${time} ${ev.name} [${ev.consultStatus}]</div>
                             <div style="font-size:0.78rem; color:#4a5568; margin-top:2px;">담당: ${ev.consultant || '출장팀'} | ☎ ${contactNum}</div>
                         </div>
@@ -733,24 +754,6 @@
         btn.classList.add('active');
     }
 
-    function showEventModal(ev) {
-        document.getElementById('modalContent').innerHTML = `
-            <h3 style="color:var(--primary-color); margin-bottom:8px;">${ev.name} 현장 일정</h3>
-            <p style="font-size:0.85rem; margin-bottom:4px;"><strong>일시:</strong> ${ev.consultDate ? ev.consultDate.replace('T', ' ') : '미정'}</p>
-            <p style="font-size:0.85rem; margin-bottom:4px;"><strong>대표자:</strong> ${ev.owner} (📱 ${ev.phone || '-'})</p>
-            <p style="font-size:0.85rem; margin-bottom:4px;"><strong>영업장 번호:</strong> ☎️ ${ev.storePhone || '-'}</p>
-            <p style="font-size:0.85rem; margin-bottom:8px;"><strong>주소:</strong> ${ev.address || '-'}</p>
-            <div style="padding:10px; background:#f7fafc; border-radius:6px; font-size:0.82rem; border:1px solid #e2e8f0;">
-                <strong>특이사항 / 요구사항:</strong><br>${ev.notes || '기재된 특이사항이 없습니다.'}
-            </div>
-        `;
-        document.getElementById('eventModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('eventModal').style.display = 'none';
-    }
-
     function filterData() {
         const txt = document.getElementById('searchInput').value.toLowerCase();
         const stat = document.getElementById('statusFilter').value;
@@ -768,8 +771,13 @@
         });
     }
 
+    // 초기 화면 즉시 렌더링 후 비동기 시트 데이터 연동
     window.onload = function() {
         checkAdminAuth();
+        renderProjectTabs();
+        renderStats();
+        renderCards();
+        renderCalendar();
         loadDataFromSheet();
     };
 </script>
