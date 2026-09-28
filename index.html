@@ -1,786 +1,637 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>영암군 외식·식품 육성사업 공정 통합 대시보드</title>
-    
-    <style>
-        :root {
-            --primary-color: #1a365d;
-            --secondary-color: #2b6cb0;
-            --accent-orange: #dd6b20;
-            --holiday-color: #e53e3e;
-            --saturday-color: #3182ce;
-            --bg-color: #f7fafc;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --text-color: #2d3748;
-            --done-bg: #f1f5f9;
-            --done-text: #64748b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="2026 영암군 농특산물 활용 메뉴 개발 지원사업 추진계획(안)">
+<title>2026 영암군 농특산물 활용 메뉴 개발 지원사업</title>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-color); color: var(--text-color); line-height: 1.5; padding: 12px;
-            user-select: none; -webkit-user-select: none;
-        }
+<style>
+:root{
+  --bg:#f4f6f5;
+  --card:#ffffff;
+  --text:#17211e;
+  --muted:#66756f;
+  --line:#d9e3df;
+  --green:#0d6b50;
+  --green-dark:#0b4d3b;
+  --green-soft:#eaf5f0;
+  --blue:#5579bf;
+  --orange:#d98b2e;
+  --purple:#7b63ad;
+  --red:#bd5e5e;
+  --weekend:#f3f4f5;
+  --holiday:#fff0f0;
+  --holiday-text:#b34a4a;
+  --shadow:0 5px 16px rgba(25,65,52,.06);
+  --radius:14px;
+  --max:1380px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR","Apple SD Gothic Neo",Arial,sans-serif;
+  line-height:1.5;word-break:keep-all;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{width:min(var(--max),calc(100% - 24px));margin:0 auto}
 
-        .container { max-width: 1400px; margin: 0 auto; }
+/* Header */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(8px)
+}
+.header-inner{
+  min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:14px
+}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:var(--green);color:#fff;font-size:11px;font-weight:900;flex:0 0 auto
+}
+.brand strong{display:block;font-size:14px;line-height:1.2}
+.brand span{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+nav{display:flex;gap:2px}
+nav a{padding:8px 9px;border-radius:8px;font-size:12px;font-weight:800;color:#50605a}
+nav a:hover{background:var(--green-soft);color:var(--green)}
+.menu-btn{
+  display:none;width:39px;height:39px;border-radius:9px;border:1px solid var(--line);
+  background:#fff;align-items:center;justify-content:center;cursor:pointer
+}
 
-        header { 
-            background: linear-gradient(135deg, var(--primary-color) 0%, #2c5282 100%); 
-            color: white; padding: 16px; border-radius: 12px; margin-bottom: 12px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-        }
-        .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-        .header-title h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
-        .header-title p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
-        .client-badge { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.25); }
+/* Hero */
+.hero{padding:14px 0 7px}
+.hero-card{
+  display:grid;grid-template-columns:1fr 390px;gap:22px;align-items:center;
+  padding:23px 26px;border-radius:16px;
+  background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff
+}
+.eyebrow{font-size:10px;font-weight:900;color:#d6f0e5}
+.hero h1{margin:5px 0 7px;font-size:27px;line-height:1.25;letter-spacing:-.035em}
+.hero p{margin:0;font-size:12px;color:rgba(255,255,255,.83);max-width:900px}
+.hero-plan{
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;background:rgba(255,255,255,.08);padding:13px 14px
+}
+.hero-plan b{display:block;font-size:10px;color:rgba(255,255,255,.7);margin-bottom:7px}
+.hero-plan ol{margin:0;padding-left:18px;font-size:12px;font-weight:800}
+.hero-plan li+li{margin-top:5px}
 
-        /* 상단 과업 탭 영역 */
-        .project-selector { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
-        .proj-btn { 
-            flex: 1; min-width: 140px; background: rgba(255, 255, 255, 0.15); color: #edf2f7; 
-            border: 1px solid rgba(255, 255, 255, 0.25); padding: 10px 12px; border-radius: 8px; 
-            cursor: pointer; font-weight: 700; font-size: 0.82rem; text-align: center; transition: 0.2s;
-        }
-        .proj-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
-        .proj-btn.is-done { background: #475569; opacity: 0.85; border-color: #64748b; }
-        .proj-btn.dimmed { opacity: 0.5; border-style: dashed; }
-        .add-proj-btn { background: #38a169; border-color: #38a169; flex: 0.3; min-width: 110px; color: white; }
-        .setting-proj-btn { background: transparent; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+/* Common */
+section{padding:14px 0}
+.section-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:9px
+}
+.section-head h2{margin:0;font-size:21px;letter-spacing:-.03em}
+.section-head p{margin:3px 0 0;font-size:11px;color:var(--muted)}
+.badge{
+  display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;
+  font-size:10px;font-weight:900;white-space:nowrap
+}
+.badge.ok{background:#e8f6ef;color:#0b694c}
+.badge.plan{background:#edf3ff;color:#4163a5}
+.badge.check{background:#fff3df;color:#8d580d}
 
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; }
-        .stat-card { background: rgba(255, 255, 255, 0.12); padding: 8px 6px; border-radius: 8px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.15); }
-        .stat-card .num { font-size: 1.15rem; font-weight: bold; color: #feebc8; }
-        .stat-card .label { font-size: 0.7rem; opacity: 0.95; margin-top: 2px; white-space: nowrap; }
+/* Direction */
+.direction-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.direction{
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;box-shadow:var(--shadow)
+}
+.direction .step{font-size:9px;font-weight:900;color:var(--green)}
+.direction h3{margin:4px 0;font-size:14px}
+.direction p{margin:0;font-size:10px;color:var(--muted)}
+.direction.current{background:var(--green-soft);border-color:#cae6d8}
 
-        .controls { 
-            background: var(--card-bg); padding: 10px 14px; border-radius: 10px; margin-bottom: 12px; 
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; 
-            border: 1px solid var(--border-color); 
-        }
-        .search-filter { display: flex; gap: 6px; flex: 1; min-width: 220px; align-items: center; }
-        input[type="text"], input[type="datetime-local"], select, textarea { 
-            padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; font-family: inherit;
-        }
-        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--secondary-color); margin-right: 4px; }
-        #searchInput { flex: 1; min-width: 120px; }
+/* Schedule */
+.schedule-shell{
+  background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden
+}
+.schedule-toolbar{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 13px;border-bottom:1px solid var(--line);background:#fbfcfc
+}
+.month-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.month-btn{
+  border:1px solid var(--line);background:#fff;color:#52615c;
+  padding:7px 13px;border-radius:9px;font-size:11px;font-weight:900;cursor:pointer
+}
+.month-btn.active{background:var(--green);border-color:var(--green);color:#fff}
+.schedule-meta{font-size:10px;color:var(--muted);text-align:right}
+.month-summary{
+  display:grid;grid-template-columns:140px 1fr 1fr 1fr;gap:7px;
+  padding:9px 13px;border-bottom:1px solid var(--line)
+}
+.month-summary .box{
+  border:1px solid #e5ece9;border-radius:9px;background:#f9fbfa;padding:8px 9px
+}
+.month-summary b{display:block;font-size:9px;color:var(--muted);margin-bottom:2px}
+.month-summary strong{font-size:11px}
+.month-summary .month-title{background:var(--green-soft);border-color:#cae6d8;color:var(--green-dark)}
+.month-summary .month-title strong{font-size:17px}
 
-        .btn-action-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-        .btn { padding: 7px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; white-space: nowrap; transition: 0.2s; }
-        .btn-success { background: #38a169; color: white; }
-        .btn-primary { background: var(--secondary-color); color: white; }
-        .btn-danger { background: #e53e3e; color: white; }
-        .btn-secondary { background: #4a5568; color: white; }
+.gantt-wrap{overflow:auto;max-height:590px}
+.gantt{
+  border-collapse:separate;border-spacing:0;min-width:1280px;width:100%;table-layout:fixed
+}
+.gantt th,.gantt td{
+  border-right:1px solid #dde5e2;border-bottom:1px solid #e6ece9;
+  padding:0;text-align:center;height:36px;font-size:10px
+}
+.gantt thead th{
+  position:sticky;top:0;z-index:10;background:#f4f7f6;font-weight:900
+}
+.gantt .no{width:34px;min-width:34px}
+.gantt .task{width:160px;min-width:160px;text-align:left;padding:0 9px}
+.gantt .detail{width:250px;min-width:250px;text-align:left;padding:0 9px}
+.gantt .owner{width:78px;min-width:78px}
+.gantt .fixed{position:sticky;left:0;background:#fff;z-index:7}
+.gantt thead .fixed{z-index:16;background:#f4f7f6}
+.gantt .task.fixed{left:34px}
+.gantt .detail.fixed{left:194px}
+.gantt .day{width:31px;min-width:31px}
+.gantt .weekend-head{background:var(--weekend)!important;color:#7b8581}
+.gantt .holiday-head{background:var(--holiday)!important;color:var(--holiday-text)}
+.gantt .weekend-cell{background:var(--weekend)}
+.gantt .holiday-cell{
+  background:repeating-linear-gradient(135deg,#fff0f0,#fff0f0 6px,#ffe7e7 6px,#ffe7e7 12px)
+}
+.gantt .holiday-label{
+  font-size:7px;line-height:1.05;color:var(--holiday-text);font-weight:900;
+  display:block;white-space:normal
+}
+.gantt tbody tr:hover .fixed{background:#fbfdfc}
+.gantt .bar-cell{position:relative;background:#fff}
+.gantt .bar{
+  height:22px;margin:6px 1px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:8px;font-weight:900;white-space:nowrap;overflow:hidden
+}
+.gantt .bar.green{background:#3e9876}
+.gantt .bar.blue{background:#587cc2}
+.gantt .bar.orange{background:#d99136}
+.gantt .bar.purple{background:#7e64ae}
+.gantt .bar.red{background:#ba5e5e}
+.gantt-note{
+  padding:9px 13px;border-top:1px solid var(--line);background:#fbfcfc;color:var(--muted);font-size:10px
+}
 
-        .tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-        .tab-btn { flex: 1; padding: 10px 6px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--text-color); font-size: 0.8rem; text-align: center; white-space: nowrap; }
-        .tab-btn.active { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+/* Company plan */
+.table-card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)
+}
+.table-scroll{overflow-x:auto}
+.company-table{width:100%;border-collapse:collapse;min-width:1020px}
+.company-table th{
+  background:#f4f7f6;border-bottom:1px solid var(--line);
+  padding:9px 10px;text-align:left;font-size:10px;color:#4d5c57
+}
+.company-table td{
+  padding:10px;border-bottom:1px solid #e9efed;font-size:11px;vertical-align:top
+}
+.company-table tr:last-child td{border-bottom:0}
+.company-table .name{font-size:12px;font-weight:900;color:var(--green-dark)}
+.tag{
+  display:inline-block;margin:2px 3px 2px 0;padding:4px 6px;border-radius:6px;
+  background:var(--green-soft);color:#2c5c4c;font-size:9px;font-weight:900
+}
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+/* Confirm */
+.confirm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.confirm{
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)
+}
+.confirm.highlight{background:#fff6e7;border-color:#edd9ad}
+.confirm h3{margin:0 0 7px;font-size:14px}
+.confirm ul{margin:0;padding-left:17px;font-size:11px;color:#46534f}
+.confirm li+li{margin-top:5px}
 
-        .company-cards-list { display: flex; flex-direction: column; gap: 10px; }
-        .accordion-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; transition: 0.2s; }
-        
-        /* 완료된 카드: 음영 처리 및 취소선 */
-        .accordion-card.is-completed { background: var(--done-bg); opacity: 0.82; border-color: #cbd5e1; }
-        .accordion-card.is-completed h3 { text-decoration: line-through; color: var(--done-text); }
-        .badge-done { background: #475569; color: white; font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 6px; text-decoration: none !important; display: inline-block; }
+/* Footer */
+footer{padding:18px 0 30px;color:#78857f;font-size:10px}
+.footer-inner{
+  border-top:1px solid var(--line);padding-top:12px;
+  display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap
+}
 
-        .card-summary { padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
-        .summary-top-row { display: flex; justify-content: space-between; align-items: flex-start; }
-        .summary-left { display: flex; align-items: flex-start; gap: 8px; }
-        .company-chk { margin-top: 3px; accent-color: #e53e3e; width: 17px; height: 17px; }
-        .company-num { font-size: 1.05rem; font-weight: 800; color: var(--secondary-color); width: 24px; flex-shrink: 0; }
-        .company-name-box h3 { font-size: 1.0rem; font-weight: 700; color: var(--primary-color); display: flex; align-items: center; }
-        .company-info-text { font-size: 0.78rem; color: #718096; margin-top: 2px; line-height: 1.35; }
-
-        .summary-status-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid #edf2f7; }
-        .pills-box { display: flex; gap: 4px; flex-wrap: wrap; }
-        .round-status-pill { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: white; border: 1px solid #cbd5e1; }
-        .toggle-btn { background: #edf2f7; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: bold; color: var(--primary-color); flex-shrink: 0; }
-
-        .card-detail { display: none; padding: 14px; background: #f8fafc; border-top: 1px solid var(--border-color); }
-        .card-detail.open { display: block; }
-
-        .admin-options { background: #fffbebf8; border: 1px dashed #d69e2e; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; display: flex; gap: 15px; font-size: 0.8rem; font-weight: bold; color: #975a16; }
-
-        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-        .form-row label { font-size: 0.75rem; font-weight: bold; color: #4a5568; }
-        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-        .req-box { background: #ebf8ff; padding: 10px; border-radius: 6px; border: 1px solid #bee3f8; margin-bottom: 10px; }
-        .req-box label { font-weight: bold; color: #2b6cb0; font-size: 0.78rem; display: block; margin-bottom: 4px; }
-
-        .tasks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px; }
-        .task-item-box { background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
-        .task-item-box h5 { font-size: 0.8rem; color: var(--primary-color); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-
-        .map-link-inline { display: inline-flex; align-items: center; gap: 2px; color: #276749; text-decoration: none; font-weight: bold; font-size: 0.75rem; background: #c6f6d5; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
-
-        /* 달력 */
-        .calendar-container { background: var(--card-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .calendar-header h2 { font-size: 1.1rem; color: var(--primary-color); }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        .calendar-day-header { text-align: center; font-weight: bold; padding: 6px 2px; background: #f8fafc; border-radius: 4px; color: var(--primary-color); font-size: 0.78rem; }
-        .calendar-day-header.sun { color: var(--holiday-color); }
-        .calendar-day-header.sat { color: var(--saturday-color); }
-        .calendar-day { height: 120px; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px; background: #ffffff; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
-        .calendar-day .date-num { font-weight: bold; font-size: 0.75rem; margin-bottom: 2px; display: flex; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
-        .calendar-day.sun .date-num, .calendar-day.holiday .date-num { color: var(--holiday-color); }
-        .calendar-day.sat .date-num { color: var(--saturday-color); }
-        .event-card { background: #ffffff; padding: 4px 6px; border-radius: 4px; font-size: 0.68rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid #cbd5e1; border-left-width: 3px; }
-        .event-card.status-예정 { border-left-color: var(--status-planned); background: #ebf8ff; }
-        .event-card.status-진행 { border-left-color: var(--status-progress); background: #fffaf0; }
-        .event-card.status-완료 { border-left-color: var(--status-done); background: #f0fff4; text-decoration: line-through; color: #64748b; }
-
-        .mobile-schedule-list { display: none; flex-direction: column; gap: 10px; }
-        .mobile-date-group { background: #ffffff; border-radius: 8px; border: 1px solid var(--border-color); padding: 12px; }
-        .mobile-date-header { font-weight: 800; font-size: 0.9rem; color: var(--primary-color); padding-bottom: 6px; border-bottom: 1.5px solid #edf2f7; margin-bottom: 8px; display: flex; justify-content: space-between; }
-
-        #syncBadge { display: none; font-size: 0.72rem; color: #2b6cb0; font-weight: bold; background: #e2e8f0; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
-
-        @media (max-width: 768px) {
-            body { padding: 8px; }
-            .calendar-grid { display: none !important; }
-            .mobile-schedule-list { display: flex !important; }
-            .card-summary { flex-direction: column; }
-            .header-title h1 { font-size: 1.1rem; }
-            .stats-container { grid-template-columns: repeat(3, 1fr); }
-            .stat-card .num { font-size: 1.0rem; }
-            .stat-card .label { font-size: 0.65rem; }
-        }
-        @media (min-width: 769px) {
-            .card-summary { flex-direction: row; align-items: center; justify-content: space-between; }
-        }
-    </style>
+@media(max-width:1000px){
+  .hero-card{grid-template-columns:1fr}
+  .direction-grid{grid-template-columns:repeat(2,1fr)}
+  .month-summary{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  .wrap{width:min(100% - 14px,var(--max))}
+  .brand span{display:none}
+  nav{
+    display:none;position:absolute;top:60px;left:7px;right:7px;background:#fff;
+    border:1px solid var(--line);border-radius:12px;padding:7px;box-shadow:var(--shadow);
+    flex-direction:column;align-items:stretch
+  }
+  nav.open{display:flex}
+  .menu-btn{display:flex}
+  .hero{padding-top:8px}
+  .hero-card{padding:18px;border-radius:13px}
+  .hero h1{font-size:22px}
+  .direction-grid{grid-template-columns:1fr}
+  .schedule-toolbar{display:block}
+  .schedule-meta{text-align:left;margin-top:7px}
+  .month-summary{grid-template-columns:1fr}
+  .gantt-wrap{max-height:none}
+  .confirm-grid{grid-template-columns:1fr}
+}
+@media print{
+  header,.month-tabs,.menu-btn{display:none!important}
+  body{background:#fff}
+  .wrap{width:100%;max-width:none}
+  .gantt-wrap{overflow:visible;max-height:none}
+  .schedule-shell,.direction,.table-card,.confirm{box-shadow:none}
+}
+</style>
 </head>
-<body oncontextmenu="return false;">
 
-<div class="container">
-    <header>
-        <div class="header-top">
-            <div class="header-title">
-                <h1>영암군 외식·식품 육성사업 공정 대시보드</h1>
-                <p>수행기관 ↔ 영암군 담당 주무관 실시간 공정표 및 현장 스케줄 공유</p>
-            </div>
-            <div class="client-badge">🏛️ 영암군청 발주 사업</div>
+<body>
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <div class="brand-mark">영암</div>
+      <div>
+        <strong>농특산물 활용 메뉴 개발 지원사업</strong>
+        <span>1차 사전진단 결과 및 홍보 중심 추진계획(안)</span>
+      </div>
+    </a>
+    <nav id="nav">
+      <a href="#direction">추진방향</a>
+      <a href="#schedule">월별일정</a>
+      <a href="#companies">업소별지원</a>
+      <a href="#confirm">확인사항</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn">☰</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-card">
+        <div>
+          <div class="eyebrow">2026 영암군 · 추진계획(안)</div>
+          <h1>9월 17일 1차 사전진단 완료<br>10월 업소별 홍보방향 확정 → 11월 제작·적용·과업정리</h1>
+          <p>
+            본 과업은 레시피 개발보다 업소별 홍보 개선과 실물 홍보물 제작에 중점을 두고 추진함.
+            2차 컨설팅을 통해 각 업소에 실제 필요한 메뉴판·POP·X배너·메뉴 안내물·온라인 활용 이미지 등의 지원 항목을 확정한 후,
+            11월 말까지 제작·납품 및 결과정리를 완료하는 방향임.
+          </p>
         </div>
-
-        <!-- 과업 탭 영역 (상시 보장) -->
-        <div id="projectTabs" class="project-selector"></div>
-        <div class="stats-container" id="statsBar"></div>
-    </header>
-
-    <div class="controls">
-        <div class="search-filter">
-            <input type="text" id="searchInput" placeholder="업소명 / 연락처 / 내용 검색..." onkeyup="filterData()">
-            <select id="statusFilter" onchange="filterData()">
-                <option value="">진행상태 전체</option>
-                <option value="예정">예정</option>
-                <option value="진행">진행중</option>
-                <option value="완료">완료</option>
-            </select>
-            <span id="syncBadge">🔄 데이터 동기화 중...</span>
+        <div class="hero-plan">
+          <b>핵심 운영안</b>
+          <ol>
+            <li>업소별 홍보 애로사항 재확인</li>
+            <li>지원할 홍보물 1종 내외 우선 확정</li>
+            <li>디자인·검수·제작·현장 적용</li>
+            <li>11월 말 결과자료 및 최종보고 정리</li>
+          </ol>
         </div>
-
-        <div class="btn-action-group" id="adminControls" style="display: none;">
-            <label style="font-size: 0.78rem; font-weight: bold; color: #4a5568; display: flex; align-items: center; cursor: pointer;">
-                <input type="checkbox" id="selectAllChk" onchange="toggleSelectAll(this.checked)"> 전체선택
-            </label>
-            <button class="btn btn-danger" id="btnBatchDelete" onclick="deleteSelectedCompanies()" style="display: none;">🗑️ 선택 삭제</button>
-            <button class="btn btn-primary" onclick="addNewCompany()">➕ 업체 즉시 추가</button>
-            <button class="btn btn-success" onclick="manualSync()">☁️ 즉시 동기화</button>
-            <button class="btn btn-secondary" onclick="logoutAdmin()">로그아웃</button>
-        </div>
-
-        <div id="guestControls">
-            <button onclick="promptAdminLogin()" style="background: none; border: none; cursor: pointer; opacity: 0.2; font-size: 0.85rem;" title="관리자 인증">🔒</button>
-        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('cards-view', this)">📋 업소별 상세 & 요구사항</button>
-        <button class="tab-btn" onclick="switchTab('calendar-view', this)">📅 현장방문 스케줄러</button>
-    </div>
-
-    <div id="cards-view" class="tab-content active">
-        <div class="company-cards-list" id="cardsContainer"></div>
-    </div>
-
-    <div id="calendar-view" class="tab-content">
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button class="btn btn-secondary" style="padding:5px 10px;" onclick="changeMonth(-1)">◀ 이전달</button>
-                <h2 id="calendarTitle">2026년 9월</h2>
-                <button class="btn btn-secondary" style="padding:5px 10px;" onclick="changeMonth(1)">다음달 ▶</button>
-            </div>
-            <div class="calendar-grid">
-                <div class="calendar-day-header sun">일</div>
-                <div class="calendar-day-header">월</div>
-                <div class="calendar-day-header">화</div>
-                <div class="calendar-day-header">수</div>
-                <div class="calendar-day-header">목</div>
-                <div class="calendar-day-header">금</div>
-                <div class="calendar-day-header sat">토</div>
-            </div>
-            <div class="calendar-grid" id="calendarDays"></div>
-            <div class="mobile-schedule-list" id="mobileScheduleList"></div>
+  <section id="direction">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>사업 추진방향</h2>
+          <p>과도한 메뉴개발보다는 업소가 바로 활용할 수 있는 홍보 결과물 중심으로 운영함.</p>
         </div>
+        <span class="badge plan">홍보 중심 운영</span>
+      </div>
+
+      <div class="direction-grid">
+        <div class="direction current">
+          <div class="step">STEP 01</div>
+          <h3>1차 진단</h3>
+          <p>9월 17일 업소별 현황·메뉴·홍보 애로사항 확인</p>
+        </div>
+        <div class="direction">
+          <div class="step">STEP 02</div>
+          <h3>2차 컨설팅</h3>
+          <p>홍보 우선순위와 실제 제작이 필요한 품목을 업소별로 확정</p>
+        </div>
+        <div class="direction">
+          <div class="step">STEP 03</div>
+          <h3>홍보물 제작</h3>
+          <p>메뉴판·POP·X배너·안내물·온라인 활용 이미지 등 맞춤 제작</p>
+        </div>
+        <div class="direction">
+          <div class="step">STEP 04</div>
+          <h3>적용·정리</h3>
+          <p>업소별 납품·활용상태 확인 및 결과자료·최종보고 정리</p>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
+
+  <section id="schedule">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>월별 세부 공정표</h2>
+          <p>주말·공휴일도 달력상 표기하되, 해당 일자에는 과업 일정을 배정하지 않음.</p>
+        </div>
+      </div>
+
+      <div class="schedule-shell">
+        <div class="schedule-toolbar">
+          <div class="month-tabs">
+            <button class="month-btn" data-month="9">9월</button>
+            <button class="month-btn active" data-month="10">10월</button>
+            <button class="month-btn" data-month="11">11월</button>
+          </div>
+          <div class="schedule-meta">※ 세부일정은 영암군 및 참여업소 협의에 따라 조정 가능</div>
+        </div>
+
+        <div class="month-summary">
+          <div class="box month-title">
+            <b>선택 월</b>
+            <strong id="summaryMonth">10월</strong>
+          </div>
+          <div class="box">
+            <b>핵심목표</b>
+            <strong id="summaryGoal">업소별 홍보 지원항목 확정</strong>
+          </div>
+          <div class="box">
+            <b>주요 실행</b>
+            <strong id="summaryAction">2차 컨설팅·홍보물 종류 및 규격 결정</strong>
+          </div>
+          <div class="box">
+            <b>주요 산출물</b>
+            <strong id="summaryOutput">업소별 홍보지원 확정안·제작 기획자료</strong>
+          </div>
+        </div>
+
+        <div class="gantt-wrap">
+          <table class="gantt" id="gantt"></table>
+        </div>
+        <div class="gantt-note">
+          회색은 주말, 붉은 음영은 공휴일임. 주말·공휴일은 표기만 하고 업무 막대는 배정하지 않음.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="companies">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>업소별 홍보 지원방향(안)</h2>
+          <p>1차 조사에서 확인된 수요를 기준으로 한 검토안이며, 2차 컨설팅에서 최종 제작품목을 확정함.</p>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table class="company-table">
+            <thead>
+              <tr>
+                <th style="width:150px">업소명</th>
+                <th>1차 확인사항</th>
+                <th>2차 컨설팅 확인사항</th>
+                <th>우선 검토 홍보물</th>
+                <th style="width:170px">추진방향</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">담소헌</td>
+                <td>다양한 메뉴 구성, 메뉴 카테고리 정비 및 홍보 강화 필요</td>
+                <td>대표메뉴 노출방식, 기존 메뉴판 개선범위, 매장 내 홍보물 필요 위치 확인</td>
+                <td><span class="tag">메뉴판</span><span class="tag">테이블 POP</span><span class="tag">메뉴 안내물</span></td>
+                <td>메뉴 정보 전달력 개선</td>
+              </tr>
+              <tr>
+                <td class="name">삼호집 정육식당</td>
+                <td>육회비빔밥 등 대표메뉴의 시각적 홍보 강화 필요</td>
+                <td>대표메뉴 사진·문구·매장 내외 노출 위치 및 홍보물 규격 확인</td>
+                <td><span class="tag">X배너</span><span class="tag">POP</span><span class="tag">대표메뉴 홍보물</span></td>
+                <td>대표메뉴 집중 노출</td>
+              </tr>
+              <tr>
+                <td class="name">미담</td>
+                <td>지역 농특산물 활용 특성을 홍보에 반영할 필요</td>
+                <td>실제 강조할 지역 식재료·대표메뉴·스토리 문구 확인</td>
+                <td><span class="tag">메뉴 스토리</span><span class="tag">메뉴 안내물</span><span class="tag">홍보 이미지</span></td>
+                <td>지역성·차별성 시각화</td>
+              </tr>
+              <tr>
+                <td class="name">옛터</td>
+                <td>다양한 메뉴 중 대표메뉴와 특화요소의 전달력 개선 필요</td>
+                <td>우선 홍보할 메뉴, 메뉴 구성 정리, 고객에게 강조할 핵심 정보 확인</td>
+                <td><span class="tag">메뉴 안내물</span><span class="tag">POP</span><span class="tag">메뉴판 보완</span></td>
+                <td>대표메뉴 선택 집중</td>
+              </tr>
+              <tr>
+                <td class="name">하눌타리</td>
+                <td>온라인 홍보 및 고객 유입을 위한 홍보 개선 수요 확인</td>
+                <td>실물 홍보물 필요 여부와 온라인에서 우선 노출할 메뉴·문구 확인</td>
+                <td><span class="tag">홍보 이미지</span><span class="tag">온라인 활용물</span><span class="tag">필요 시 POP</span></td>
+                <td>온라인 활용성 강화</td>
+              </tr>
+              <tr>
+                <td class="name">뉴장충동왕족발보쌈</td>
+                <td>메뉴판 교체 필요 및 대표메뉴 홍보 개선 의견 확인</td>
+                <td>메뉴명·가격·구성·사진자료 확인 및 메뉴판 제작범위 확정</td>
+                <td><span class="tag">메뉴판</span><span class="tag">대표메뉴 홍보물</span><span class="tag">홍보 이미지</span></td>
+                <td>메뉴판 정보 정비</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="confirm">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>2차 컨설팅 시 확인할 사항</h2>
+          <p>제작 전 업소별 필요성을 다시 확인하여 불필요한 제작을 줄이고 활용도가 높은 결과물에 집중함.</p>
+        </div>
+      </div>
+
+      <div class="confirm-grid">
+        <div class="confirm highlight">
+          <h3>업소별 제작범위 확인</h3>
+          <ul>
+            <li>가장 필요한 홍보물 1순위 확인</li>
+            <li>메뉴판·POP·X배너·안내물 등 실제 설치·활용 위치 확인</li>
+            <li>메뉴명·가격·대표메뉴·기존 사진 등 제작 원자료 확보</li>
+            <li>실물 홍보물과 온라인 활용 이미지 중 우선순위 결정</li>
+          </ul>
+        </div>
+        <div class="confirm">
+          <h3>제작 전 검수사항</h3>
+          <ul>
+            <li>업소명·연락처·메뉴명·가격 등 기초정보 확인</li>
+            <li>홍보 문구 및 지역 농특산물 관련 표현 확인</li>
+            <li>규격·수량·설치방식 및 최종 활용방법 확인</li>
+            <li>최종 시안은 업소 확인 후 제작 진행</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div><strong>2026 영암군 농특산물 활용 메뉴 개발 지원사업</strong></div>
+    <div>※ 업소별 세부 홍보물은 2차 컨설팅 결과 및 협의에 따라 조정 가능함.</div>
+  </div>
+</footer>
 
 <script>
-    // 🔒 F12 및 우클릭 보안 차단
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || e.keyCode === 123 || 
-            (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || 
-            (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))) {
-            e.preventDefault(); e.stopPropagation(); return false;
-        }
-    });
+const HOLIDAYS = {
+  9: {
+    24:"추석 연휴",
+    25:"추석",
+    26:"추석 연휴"
+  },
+  10:{
+    3:"개천절",
+    5:"대체공휴일",
+    9:"한글날"
+  },
+  11:{}
+};
 
-    //const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_o2ekT0chZ4ZP5rLlYk_C32rG3AKmi1n-6w8LUTRo4B5EbdLjRFsjcn-2NOnQmmnDTg/exec"; 구버전
-    const GoOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxHj4lSXCpSarNAjkx2NZZu0MOqPf5-ahLRU2JkrGcPKbIVQw7nIZpRbnRHB6fu9TwENw/exec";
-    const ADMIN_PASSWORD = "yeongam2026";
+const scheduleData = {
+  9:{
+    goal:"1차 사전진단 결과 정리 및 후속 추진안 마련",
+    action:"9월 17일 현장진단 → 업소별 홍보수요 정리 → 2차 컨설팅 준비",
+    output:"사전조사서·회의록·업소별 홍보 개선과제",
+    tasks:[
+      {name:"1차 사전진단",detail:"6개소 현장조사 및 1회차 회의 진행",owner:"수행사",start:17,end:17,color:"green",label:"9/17"},
+      {name:"자료 취합·정리",detail:"사전조사서·회의내용 및 업소별 홍보수요 정리",owner:"수행사",start:18,end:22,color:"blue",label:"자료정리"},
+      {name:"홍보 개선과제 분류",detail:"메뉴판·POP·배너·온라인 활용 등 업소별 우선 수요 구분",owner:"수행사",start:21,end:23,color:"purple",label:"분류"},
+      {name:"2차 컨설팅 준비",detail:"10월 업소별 재확인 항목 및 추진일정 정리",owner:"수행사",start:28,end:30,color:"orange",label:"준비"}
+    ]
+  },
+  10:{
+    goal:"업소별 홍보 지원항목 및 제작범위 확정",
+    action:"2차 컨설팅·우선 홍보물 결정·원자료 수집·제작기획",
+    output:"업소별 홍보지원 확정안·원고/사진자료·제작 기획안",
+    tasks:[
+      {name:"1차 결과 공유",detail:"사전진단 결과 및 향후 홍보 중심 운영방향 공유",owner:"군·수행사",start:1,end:2,color:"blue",label:"공유"},
+      {name:"2차 컨설팅 1차군",detail:"담소헌·삼호집·미담의 홍보수요 및 제작 우선순위 재확인",owner:"수행사",start:6,end:8,color:"green",label:"방문"},
+      {name:"2차 컨설팅 2차군",detail:"옛터·하눌타리·뉴장충동왕족발보쌈 홍보수요 재확인",owner:"수행사",start:12,end:14,color:"green",label:"방문"},
+      {name:"업소별 홍보물 확정",detail:"메뉴판·POP·X배너·안내물·온라인 이미지 등 우선 품목 확정",owner:"업소·수행사",start:15,end:20,color:"orange",label:"확정"},
+      {name:"제작 원자료 확보",detail:"메뉴명·가격·기존사진·문구·규격 등 제작자료 취합",owner:"업소·수행사",start:19,end:23,color:"purple",label:"자료"},
+      {name:"홍보물 기획",detail:"업소별 콘텐츠 구성·규격·디자인 방향 및 제작안 정리",owner:"수행사",start:26,end:30,color:"blue",label:"기획"}
+    ]
+  },
+  11:{
+    goal:"홍보물 제작·납품·현장적용 및 과업정리 완료",
+    action:"디자인 → 검수 → 수정 → 제작·납품 → 활용점검 → 최종보고",
+    output:"최종 홍보물·현장 적용사진·만족도·최종 결과보고",
+    tasks:[
+      {name:"홍보물 1차 디자인",detail:"업소별 확정 품목 기준 1차 디자인 시안 제작",owner:"디자인",start:2,end:6,color:"blue",label:"1차시안"},
+      {name:"업소별 1차 검수",detail:"메뉴명·가격·사진·문구·규격 등 시안 확인",owner:"업소",start:9,end:11,color:"orange",label:"검수"},
+      {name:"디자인 수정·확정",detail:"검수의견 반영 후 최종 시안 확정",owner:"수행사",start:12,end:16,color:"purple",label:"확정"},
+      {name:"실물 제작",detail:"메뉴판·POP·X배너·안내물 등 확정 품목 제작",owner:"수행사",start:17,end:20,color:"red",label:"제작"},
+      {name:"업소별 납품·적용",detail:"제작물 전달 및 매장 내 활용상태 확인",owner:"수행사",start:23,end:25,color:"green",label:"납품"},
+      {name:"성과·만족도 정리",detail:"현장사진·업소 의견·활용결과 및 만족도 취합",owner:"수행사",start:24,end:27,color:"orange",label:"정리"},
+      {name:"최종 결과보고",detail:"업소별 수행내용·제작결과·성과자료 정리 및 과업 마감",owner:"군·수행사",start:27,end:30,color:"blue",label:"마감"}
+    ]
+  }
+};
 
-    let isAdmin = false;
+const monthNames={9:"9월",10:"10월",11:"11월"};
+function daysInMonth(month){return new Date(2026,month,0).getDate();}
+function weekday(month,day){return new Date(2026,month-1,day).getDay();}
+function dowLabel(d){return ["일","월","화","수","목","금","토"][d];}
+function isHoliday(month,day){return HOLIDAYS[month] && HOLIDAYS[month][day];}
+function isWeekend(month,day){const w=weekday(month,day);return w===0||w===6;}
+function isBusinessDay(month,day){return !isWeekend(month,day) && !isHoliday(month,day);}
 
-    // ★ 화면 깨짐 방지: 상시 기본 과업 탭 100% 보장
-    let projects = [
-        { id: 1, name: "대표맛집", isVisible: true, isDone: false },
-        { id: 2, name: "농특산물", isVisible: true, isDone: false }
-    ];
-    let companies = [];
-    let currentProject = 1;
-    let currentDate = new Date(2026, 8, 1);
+function renderSchedule(month){
+  const data=scheduleData[month];
+  const days=daysInMonth(month);
 
-    const koreanHolidays = {
-        "2026-01-01": "신정", "2026-02-16": "설날연휴", "2026-02-17": "설날", "2026-02-18": "설날연휴",
-        "2026-03-01": "삼일절", "2026-03-02": "대체공휴일", "2026-05-05": "어린이날", "2026-05-24": "부처님오신날",
-        "2026-05-25": "대체공휴일", "2026-06-06": "현충일", "2026-08-15": "광복절", "2026-08-17": "대체공휴일",
-        "2026-09-24": "추석연휴", "2026-09-25": "추석", "2026-09-26": "추석연휴", "2026-10-03": "개천절",
-        "2026-10-09": "한글날", "2026-12-25": "성탄절"
-    };
+  document.getElementById("summaryMonth").textContent=monthNames[month];
+  document.getElementById("summaryGoal").textContent=data.goal;
+  document.getElementById("summaryAction").textContent=data.action;
+  document.getElementById("summaryOutput").textContent=data.output;
 
-    // [GET: 시트 데이터 동기화]
-    async function loadDataFromSheet() {
-        showBadge("🔄 구글 시트 불러오는 중...");
-        try {
-            const res = await fetch(GOOGLE_SCRIPT_URL + "?t=" + new Date().getTime());
-            const data = await res.json();
+  let html="<thead><tr>";
+  html+='<th class="no fixed" rowspan="2">NO</th>';
+  html+='<th class="task fixed" rowspan="2">추진업무</th>';
+  html+='<th class="detail fixed" rowspan="2">세부내용</th>';
+  html+='<th class="owner" rowspan="2">구분</th>';
+  html+=`<th colspan="${days}">${monthNames[month]} 세부 공정</th></tr><tr>`;
 
-            if (data.projects && data.projects.length > 0) {
-                projects = data.projects;
-            }
-            if (data.companies) {
-                companies = data.companies;
-            }
+  for(let d=1;d<=days;d++){
+    const holiday=isHoliday(month,d);
+    const weekend=isWeekend(month,d);
+    let cls="";
+    if(holiday) cls="holiday-head";
+    else if(weekend) cls="weekend-head";
+    const label=holiday ? `<span class="holiday-label">${HOLIDAYS[month][d]}</span>` : dowLabel(weekday(month,d));
+    html+=`<th class="day ${cls}">${d}<br>${label}</th>`;
+  }
+  html+="</tr></thead><tbody>";
 
-            if (!projects.find(p => p.id === currentProject)) {
-                currentProject = projects[0].id;
-            }
-        } catch (err) {
-            console.warn("시트 로드 딜레이 (기본값 유지):", err);
-        } finally {
-            hideBadge();
-            renderProjectTabs();
-            renderStats();
-            renderCards();
-            renderCalendar();
-        }
+  data.tasks.forEach((t,i)=>{
+    html+="<tr>";
+    html+=`<td class="no fixed">${i+1}</td>`;
+    html+=`<td class="task fixed"><strong>${t.name}</strong></td>`;
+    html+=`<td class="detail fixed">${t.detail}</td>`;
+    html+=`<td class="owner">${t.owner}</td>`;
+
+    const activeBusinessDays=[];
+    for(let d=t.start;d<=t.end;d++){
+      if(isBusinessDay(month,d)) activeBusinessDays.push(d);
     }
+    const labelDay=activeBusinessDays.length ? activeBusinessDays[Math.floor(activeBusinessDays.length/2)] : null;
 
-    // [POST: 시트로 실시간 저장]
-    async function syncToGoogleSheet() {
-        showBadge("☁️ 시트에 저장 중...");
-        try {
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ projects, companies })
-            });
-        } catch (err) {
-            console.error("저장 오류:", err);
-        } finally {
-            setTimeout(hideBadge, 800);
-        }
+    for(let d=1;d<=days;d++){
+      const holiday=isHoliday(month,d);
+      const weekend=isWeekend(month,d);
+      const active=d>=t.start && d<=t.end && isBusinessDay(month,d);
+
+      if(holiday){
+        html+='<td class="holiday-cell"></td>';
+      }else if(weekend){
+        html+='<td class="weekend-cell"></td>';
+      }else if(active){
+        const label=d===labelDay ? t.label : "";
+        html+=`<td class="bar-cell"><div class="bar ${t.color}">${label}</div></td>`;
+      }else{
+        html+='<td></td>';
+      }
     }
+    html+="</tr>";
+  });
 
-    function showBadge(msg) {
-        const b = document.getElementById('syncBadge');
-        if (b) { b.innerText = msg; b.style.display = 'inline-block'; }
-    }
-    function hideBadge() {
-        const b = document.getElementById('syncBadge');
-        if (b) b.style.display = 'none';
-    }
+  html+="</tbody>";
+  document.getElementById("gantt").innerHTML=html;
+}
 
-    function manualSync() {
-        syncToGoogleSheet();
-        alert("구글 스프레드시트에 즉시 동기화되었습니다.");
-    }
+document.querySelectorAll(".month-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".month-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    renderSchedule(Number(btn.dataset.month));
+  });
+});
 
-    function checkAdminAuth() {
-        const adminKey = new URLSearchParams(window.location.search).get('admin');
-        if (adminKey === ADMIN_PASSWORD || sessionStorage.getItem('isAdminAuth') === 'true') {
-            isAdmin = true;
-            sessionStorage.setItem('isAdminAuth', 'true');
-            document.getElementById('adminControls').style.display = 'flex';
-            document.getElementById('guestControls').style.display = 'none';
-        }
-    }
+const menuBtn=document.getElementById("menuBtn");
+const nav=document.getElementById("nav");
+menuBtn.addEventListener("click",()=>nav.classList.toggle("open"));
+nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>nav.classList.remove("open")));
 
-    function promptAdminLogin() {
-        if (prompt("관리자 비밀번호를 입력하세요:") === ADMIN_PASSWORD) {
-            isAdmin = true;
-            sessionStorage.setItem('isAdminAuth', 'true');
-            window.location.reload();
-        } else {
-            alert("비밀번호가 올바르지 않습니다.");
-        }
-    }
-
-    function logoutAdmin() {
-        sessionStorage.removeItem('isAdminAuth');
-        window.location.href = window.location.pathname;
-    }
-
-    // 상단 과업 탭 렌더링
-    function renderProjectTabs() {
-        const container = document.getElementById('projectTabs');
-        if (!container) return;
-        container.innerHTML = '';
-
-        projects.forEach(p => {
-            if (!isAdmin && !p.isVisible) return; // 주무관 모드에서는 숨겨진 과업 제외
-
-            const btn = document.createElement('button');
-            btn.className = `proj-btn ${currentProject === p.id ? 'active' : ''} ${p.isDone ? 'is-done' : ''} ${!p.isVisible ? 'dimmed' : ''}`;
-            btn.innerHTML = `📁 ${p.name} ${p.isDone ? ' [완료]' : ''} ${isAdmin && !p.isVisible ? ' 🙈(숨김)' : ''}`;
-            btn.onclick = () => {
-                currentProject = p.id;
-                renderProjectTabs();
-                renderStats();
-                renderCards();
-                renderCalendar();
-            };
-            container.appendChild(btn);
-        });
-
-        if (isAdmin) {
-            const setBtn = document.createElement('button');
-            setBtn.className = 'setting-proj-btn';
-            setBtn.innerHTML = '⚙️ 과업 관리';
-            setBtn.onclick = manageCurrentProject;
-            container.appendChild(setBtn);
-
-            const addBtn = document.createElement('button');
-            addBtn.className = 'proj-btn add-proj-btn';
-            addBtn.innerText = '➕ 과업 추가';
-            addBtn.onclick = addNewProject;
-            container.appendChild(addBtn);
-        }
-    }
-
-    // 과업 추가 (구글 시트에 탭 자동 생성)
-    function addNewProject() {
-        const name = prompt("새로운 과업 이름을 입력하세요:\n(입력 즉시 상단 탭 및 구글 시트에 동일한 이름의 탭이 생성됩니다)");
-        if (name && name.trim()) {
-            const newId = Date.now();
-            projects.push({ id: newId, name: name.trim(), isVisible: true, isDone: false });
-            currentProject = newId;
-            renderProjectTabs();
-            renderStats();
-            renderCards();
-            renderCalendar();
-            syncToGoogleSheet();
-        }
-    }
-
-    // 과업 완료, 숨김/노출, 삭제 제어
-    function manageCurrentProject() {
-        const p = projects.find(x => x.id === currentProject);
-        if (!p) return;
-        const msg = `[${p.name}] 과업 설정 관리\n\n` +
-                    `1. 과업 이름 변경\n` +
-                    `2. ${p.isVisible ? '주무관 화면에서 숨기기' : '주무관 화면에 노출하기'}\n` +
-                    `3. ${p.isDone ? '과업 진행중으로 변경' : '과업 완료 처리 (완료 뱃지 및 회색 표시)'}\n` +
-                    `4. 과업 삭제 (포함된 업체 데이터 일괄 정리)\n\n` +
-                    `원하는 작업 번호를 입력하세요:`;
-        
-        const act = prompt(msg);
-        if (act === '1') {
-            const nn = prompt("새 과업 이름을 입력하세요:", p.name);
-            if (nn && nn.trim()) { p.name = nn.trim(); renderProjectTabs(); syncToGoogleSheet(); }
-        } else if (act === '2') {
-            p.isVisible = !p.isVisible;
-            alert(p.isVisible ? "주무관 화면에 노출됩니다." : "주무관 화면에서 숨김 처리되었습니다.");
-            renderProjectTabs(); syncToGoogleSheet();
-        } else if (act === '3') {
-            p.isDone = !p.isDone;
-            alert(p.isDone ? "과업이 완료 처리되었습니다." : "과업이 진행중 상태로 변경되었습니다.");
-            renderProjectTabs(); syncToGoogleSheet();
-        } else if (act === '4') {
-            if (projects.length <= 1) {
-                alert("최소 1개의 과업은 유지되어야 합니다.");
-                return;
-            }
-            if (confirm(`정말 [${p.name}] 과업을 삭제하시겠습니까?\n구글 시트에서도 해당 탭의 내용이 삭제됩니다.`)) {
-                projects = projects.filter(x => x.id !== currentProject);
-                companies = companies.filter(x => x.projectId !== currentProject);
-                currentProject = projects[0].id;
-                renderProjectTabs(); renderStats(); renderCards(); renderCalendar(); syncToGoogleSheet();
-            }
-        }
-    }
-
-    function renderStats() {
-        const bar = document.getElementById('statsBar');
-        const list = companies.filter(c => c.projectId === currentProject);
-        const total = list.length;
-        const photoDone = list.filter(c => (c.photoShoot || '').includes("완료")).length;
-        const placeDone = list.filter(c => (c.smartPlace || '').includes("완료")).length;
-        const posterDone = list.filter(c => (c.posterStatus || '').includes("완료") || (c.posterStatus || '').includes("납품")).length;
-        const consultDone = list.filter(c => (c.consultStatus || '').includes("완료")).length;
-
-        bar.innerHTML = `
-            <div class="stat-card"><div class="num">${total}개소</div><div class="label">전체 대상업체</div></div>
-            <div class="stat-card"><div class="num">${photoDone}/${total}</div><div class="label">사진/개발</div></div>
-            <div class="stat-card"><div class="num">${placeDone}/${total}</div><div class="label">스마트플레이스</div></div>
-            <div class="stat-card"><div class="num">${posterDone}/${total}</div><div class="label">홍보물제작</div></div>
-            <div class="stat-card"><div class="num">${consultDone}/${total}</div><div class="label">컨설팅완료</div></div>
-        `;
-    }
-
-    function renderCards() {
-        const container = document.getElementById('cardsContainer');
-        container.innerHTML = '';
-        
-        let list = companies.filter(c => c.projectId === currentProject);
-        if (!isAdmin) list = list.filter(c => c.isVisible !== false);
-
-        // 완료된 업체는 자동으로 하단 정렬
-        list.sort((a, b) => (a.isCompleted === b.isCompleted) ? 0 : a.isCompleted ? 1 : -1);
-
-        if (list.length === 0) {
-            container.innerHTML = `<div style="padding:30px; text-align:center; color:#a0aec0; background:white; border-radius:10px; border:1px solid #e2e8f0;">등록된 업체 정보가 없습니다. (관리자 모드에서 [➕ 업체 즉시 추가]를 눌러주세요)</div>`;
-            return;
-        }
-
-        list.forEach((c, idx) => {
-            const card = document.createElement('div');
-            card.className = `accordion-card ${c.isCompleted ? 'is-completed' : ''}`;
-            const mapUrl = `https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(c.address || '')}`;
-            const phoneInfo = [c.phone ? `📱 ${c.phone}` : '', c.storePhone ? `☎️ 매장: ${c.storePhone}` : ''].filter(Boolean).join(' | ');
-
-            card.innerHTML = `
-                <div class="card-summary" onclick="toggleCard(${c.id})">
-                    <div class="summary-top-row">
-                        <div class="summary-left">
-                            ${isAdmin ? `<input type="checkbox" class="company-chk" data-id="${c.id}" onclick="event.stopPropagation(); updateSelectedCount();">` : ''}
-                            <span class="company-num">${idx + 1}</span>
-                            <div class="company-name-box">
-                                <h3>${c.name || '(업체명 미입력)'} 
-                                    <span style="font-size:0.75rem; font-weight:normal; color:#dd6b20; margin-left:6px;">[${c.mainDish || '품목/메뉴'}]</span>
-                                    ${c.isCompleted ? `<span class="badge-done">과업완료</span>` : ''}
-                                    ${isAdmin && !c.isVisible ? `<span title="주무관 화면 숨김" style="font-size:0.8rem; margin-left:4px;">🙈</span>` : ''}
-                                </h3>
-                                <div class="company-info-text">${c.owner ? `대표: ${c.owner} | ` : ''}${phoneInfo}<br>${c.address || '주소 미등록'}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="summary-status-row">
-                        <div class="pills-box">
-                            <span class="round-status-pill">촬영: ${c.photoShoot || '대기'}</span>
-                            <span class="round-status-pill">플레이스: ${c.smartPlace || '대기'}</span>
-                            <span class="round-status-pill">홍보물: ${c.posterStatus || '대기'}</span>
-                            <span class="round-status-pill">컨설팅: ${c.consultStatus || '예정'}</span>
-                        </div>
-                        <button class="toggle-btn" id="btn-${c.id}">상세보기 ∨</button>
-                    </div>
-                </div>
-                <div class="card-detail ${c.isEditing ? 'open' : ''}" id="detail-${c.id}">
-                    ${isAdmin ? `
-                        <div class="admin-options">
-                            <label><input type="checkbox" id="f-comp-${c.id}" ${c.isCompleted ? 'checked' : ''}> ✅ 과업 완전 종료 (음영 처리 및 하단 정렬)</label>
-                            <label><input type="checkbox" id="f-vis-${c.id}" ${c.isVisible !== false ? 'checked' : ''}> 👁️ 주무관에게 노출</label>
-                        </div>
-                        <div class="form-grid-2">
-                            <div class="form-row"><label>업체명</label><input type="text" id="f-name-${c.id}" value="${c.name || ''}" placeholder="예: 중원회관"></div>
-                            <div class="form-row"><label>메뉴/주력품목</label><input type="text" id="f-dish-${c.id}" value="${c.mainDish || ''}" placeholder="예: 갈낙탕, 무화과"></div>
-                        </div>
-                        <div class="form-grid-2">
-                            <div class="form-row"><label>대표자 성명</label><input type="text" id="f-owner-${c.id}" value="${c.owner || ''}"></div>
-                            <div class="form-row"><label>대표자 휴대폰</label><input type="text" id="f-phone-${c.id}" value="${c.phone || ''}" placeholder="010-0000-0000"></div>
-                        </div>
-                        <div class="form-grid-2">
-                            <div class="form-row"><label>영업장 번호 (매장 전화)</label><input type="text" id="f-sphone-${c.id}" value="${c.storePhone || ''}" placeholder="061-000-0000"></div>
-                            <div class="form-row"><label>사업장 주소</label><input type="text" id="f-addr-${c.id}" value="${c.address || ''}"></div>
-                        </div>
-                        <div class="req-box">
-                            <label>📌 현장 요구사항 및 주무관 메모</label>
-                            <textarea id="f-notes-${c.id}" rows="2" style="width:100%;">${c.notes || ''}</textarea>
-                        </div>
-                        <div class="tasks-grid">
-                            <div class="task-item-box"><h5>사진/개발</h5><input type="text" id="f-photo-${c.id}" value="${c.photoShoot || ''}"></div>
-                            <div class="task-item-box"><h5>스마트플레이스</h5><input type="text" id="f-place-${c.id}" value="${c.smartPlace || ''}"></div>
-                            <div class="task-item-box"><h5>포스터/홍보물</h5><input type="text" id="f-poster-${c.id}" value="${c.posterStatus || ''}"></div>
-                            <div class="task-item-box"><h5>컨설팅상태</h5><input type="text" id="f-cstat-${c.id}" value="${c.consultStatus || ''}"></div>
-                        </div>
-                        <div class="form-grid-2" style="margin-top:8px;">
-                            <div class="form-row"><label>방문 일시</label><input type="datetime-local" id="f-cdate-${c.id}" value="${c.consultDate || ''}"></div>
-                            <div class="form-row"><label>담당자</label><input type="text" id="f-cmgr-${c.id}" value="${c.consultant || ''}"></div>
-                        </div>
-                        <div style="display:flex; gap:6px; margin-top:10px;">
-                            <button class="btn btn-success" style="flex:1;" onclick="saveCompany(${c.id})">💾 변경사항 저장</button>
-                            <button class="btn btn-danger" onclick="deleteSingle(${c.id})">🗑️ 삭제</button>
-                        </div>
-                    ` : `
-                        <div class="req-box">
-                            <strong>📌 현장 요구사항 & 공유 메모:</strong><br>${c.notes || '기재된 특이사항 없음'}
-                            <div><a href="${mapUrl}" target="_blank" class="map-link-inline">📍 네이버 지도 길찾기</a></div>
-                        </div>
-                        <div class="tasks-grid">
-                            <div class="task-item-box"><h5>사진/개발</h5><p style="font-size:0.75rem;">${c.photoShoot || '대기'}</p></div>
-                            <div class="task-item-box"><h5>스마트플레이스</h5><p style="font-size:0.75rem;">${c.smartPlace || '대기'}</p></div>
-                            <div class="task-item-box"><h5>포스터/홍보물</h5><p style="font-size:0.75rem;">${c.posterStatus || '대기'}</p></div>
-                            <div class="task-item-box"><h5>컨설팅상태</h5><p style="font-size:0.75rem;">${c.consultStatus || '예정'} (${c.consultDate ? c.consultDate.replace('T', ' ') : '일정 조율'})</p></div>
-                        </div>
-                    `}
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    function toggleCard(id) {
-        const d = document.getElementById(`detail-${id}`);
-        const b = document.getElementById(`btn-${id}`);
-        if (d.classList.contains('open')) {
-            d.classList.remove('open'); b.innerText = '상세보기 ∨';
-        } else {
-            d.classList.add('open'); b.innerText = '접기 ∧';
-        }
-    }
-
-    // 팝업 없이 즉시 하단에 입력 카드 생성
-    function addNewCompany() {
-        const newId = Date.now();
-        companies.push({
-            id: newId, projectId: currentProject, name: "", owner: "", phone: "", storePhone: "",
-            address: "전남 영암군", mainDish: "", photoShoot: "대기", smartPlace: "대기", posterStatus: "대기",
-            consultStatus: "예정", consultDate: "", consultant: "심훈 팀장", notes: "",
-            isCompleted: false, isVisible: true, isEditing: true
-        });
-        renderCards();
-        setTimeout(() => {
-            const input = document.getElementById(`f-name-${newId}`);
-            if (input) {
-                input.focus();
-                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 100);
-    }
-
-    function saveCompany(id) {
-        const c = companies.find(x => x.id === id);
-        if (!c) return;
-
-        c.isCompleted = document.getElementById(`f-comp-${id}`).checked;
-        c.isVisible = document.getElementById(`f-vis-${id}`).checked;
-        c.name = document.getElementById(`f-name-${id}`).value.trim();
-        c.mainDish = document.getElementById(`f-dish-${id}`).value.trim();
-        c.owner = document.getElementById(`f-owner-${id}`).value.trim();
-        c.phone = document.getElementById(`f-phone-${id}`).value.trim();
-        c.storePhone = document.getElementById(`f-sphone-${id}`).value.trim();
-        c.address = document.getElementById(`f-addr-${id}`).value.trim();
-        c.notes = document.getElementById(`f-notes-${id}`).value.trim();
-        c.photoShoot = document.getElementById(`f-photo-${id}`).value.trim();
-        c.smartPlace = document.getElementById(`f-place-${id}`).value.trim();
-        c.posterStatus = document.getElementById(`f-poster-${id}`).value.trim();
-        c.consultStatus = document.getElementById(`f-cstat-${id}`).value.trim();
-        c.consultDate = document.getElementById(`f-cdate-${id}`).value;
-        c.consultant = document.getElementById(`f-cmgr-${id}`).value.trim();
-        c.isEditing = false;
-
-        renderStats();
-        renderCards();
-        renderCalendar();
-        syncToGoogleSheet();
-        alert("업체 정보가 구글 시트에 즉시 반영되었습니다.");
-    }
-
-    function deleteSingle(id) {
-        const c = companies.find(x => x.id === id);
-        if (confirm(`[${c.name || '해당 업체'}]를 삭제하시겠습니까? 구글 시트에서도 즉시 삭제됩니다.`)) {
-            companies = companies.filter(x => x.id !== id);
-            renderStats(); renderCards(); renderCalendar(); syncToGoogleSheet();
-        }
-    }
-
-    function toggleSelectAll(checked) {
-        document.querySelectorAll('.company-chk').forEach(c => c.checked = checked);
-        updateSelectedCount();
-    }
-
-    function updateSelectedCount() {
-        const cnt = document.querySelectorAll('.company-chk:checked').length;
-        const btn = document.getElementById('btnBatchDelete');
-        if (btn) {
-            if (cnt > 0) {
-                btn.style.display = 'inline-block';
-                btn.innerText = `🗑️ 선택 삭제 (${cnt}개)`;
-            } else {
-                btn.style.display = 'none';
-            }
-        }
-    }
-
-    function deleteSelectedCompanies() {
-        const chks = document.querySelectorAll('.company-chk:checked');
-        if (chks.length === 0) return;
-        if (!confirm(`선택한 ${chks.length}개 업체를 일괄 삭제하시겠습니까?`)) return;
-
-        const idsToDelete = Array.from(chks).map(c => parseInt(c.getAttribute('data-id')));
-        companies = companies.filter(x => !idsToDelete.includes(x.id));
-
-        document.getElementById('selectAllChk').checked = false;
-        updateSelectedCount();
-        renderStats();
-        renderCards();
-        renderCalendar();
-        syncToGoogleSheet();
-    }
-
-    function renderCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        document.getElementById('calendarTitle').innerText = `${year}년 ${month + 1}월`;
-
-        const firstDay = new Date(year, month, 1).getDay();
-        const lastDate = new Date(year, month + 1, 0).getDate();
-        const pcGrid = document.getElementById('calendarDays');
-        const mList = document.getElementById('mobileScheduleList');
-        if (!pcGrid || !mList) return;
-        pcGrid.innerHTML = '';
-        mList.innerHTML = '';
-
-        for (let i = 0; i < firstDay; i++) {
-            pcGrid.appendChild(document.createElement('div'));
-        }
-
-        let list = companies.filter(c => c.projectId === currentProject);
-        if (!isAdmin) list = list.filter(c => c.isVisible !== false);
-        let hasEvents = false;
-
-        for (let date = 1; date <= lastDate; date++) {
-            const dayDiv = document.createElement('div');
-            const dayOfWeek = new Date(year, month, date).getDay();
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-            const holidayTitle = koreanHolidays[dateStr] || '';
-
-            let dayClasses = ['calendar-day'];
-            if (dayOfWeek === 0) dayClasses.push('sun');
-            if (dayOfWeek === 6) dayClasses.push('sat');
-            if (holidayTitle) dayClasses.push('holiday');
-
-            dayDiv.className = dayClasses.join(' ');
-            dayDiv.innerHTML = `
-                <div class="date-num">
-                    <span>${date}</span>
-                    ${holidayTitle ? `<span style="font-size:0.65rem; color:var(--holiday-color);">${holidayTitle}</span>` : ''}
-                </div>
-            `;
-
-            const events = list.filter(c => c.consultDate && c.consultDate.startsWith(dateStr));
-
-            events.forEach(ev => {
-                const time = ev.consultDate.split('T')[1] || '';
-                const card = document.createElement('div');
-                card.className = `event-card status-${ev.consultStatus}`;
-                card.innerHTML = `<strong>${time}</strong> ${ev.name}`;
-                dayDiv.appendChild(card);
-            });
-
-            pcGrid.appendChild(dayDiv);
-
-            if (events.length > 0 || holidayTitle) {
-                hasEvents = true;
-                const mGroup = document.createElement('div');
-                mGroup.className = 'mobile-date-group';
-                let evHtml = '';
-                events.forEach(ev => {
-                    const time = ev.consultDate.split('T')[1] || '';
-                    const contactNum = ev.storePhone || ev.phone || '연락처 미등록';
-                    evHtml += `
-                        <div class="event-card status-${ev.consultStatus}" style="padding:10px; margin-top:6px;">
-                            <div style="font-weight:bold; color:var(--primary-color);">${time} ${ev.name} [${ev.consultStatus}]</div>
-                            <div style="font-size:0.78rem; color:#4a5568; margin-top:2px;">담당: ${ev.consultant || '출장팀'} | ☎ ${contactNum}</div>
-                        </div>
-                    `;
-                });
-                mGroup.innerHTML = `
-                    <div class="mobile-date-header">
-                        <span>${month + 1}월 ${date}일 (${['일','월','화','수','목','금','토'][dayOfWeek]})</span>
-                        ${holidayTitle ? `<span style="font-size:0.75rem; color:var(--holiday-color); font-weight:bold;">${holidayTitle}</span>` : ''}
-                    </div>
-                    ${evHtml || '<div style="font-size:0.75rem; color:#a0aec0;">일정 없음</div>'}
-                `;
-                mList.appendChild(mGroup);
-            }
-        }
-
-        if (!hasEvents) {
-            mList.innerHTML = `<div style="padding:20px; text-align:center; color:#a0aec0; background:white; border-radius:8px; font-size:0.85rem;">이번 달 예정된 현장 일정이 없습니다.</div>`;
-        }
-    }
-
-    function changeMonth(d) {
-        currentDate.setMonth(currentDate.getMonth() + d);
-        renderCalendar();
-    }
-
-    function switchTab(id, btn) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-    }
-
-    function filterData() {
-        const txt = document.getElementById('searchInput').value.toLowerCase();
-        const stat = document.getElementById('statusFilter').value;
-        const cards = document.querySelectorAll('.accordion-card');
-        
-        let list = companies.filter(c => c.projectId === currentProject);
-        if (!isAdmin) list = list.filter(c => c.isVisible !== false);
-        list.sort((a, b) => (a.isCompleted === b.isCompleted) ? 0 : a.isCompleted ? 1 : -1);
-
-        list.forEach((c, i) => {
-            const str = Object.values(c).join(' ').toLowerCase();
-            const matchTxt = str.includes(txt);
-            const matchStat = !stat || str.includes(stat);
-            if (cards[i]) cards[i].style.display = (matchTxt && matchStat) ? '' : 'none';
-        });
-    }
-
-    // 초기 화면 즉시 렌더링 후 비동기 시트 데이터 연동
-    window.onload = function() {
-        checkAdminAuth();
-        renderProjectTabs();
-        renderStats();
-        renderCards();
-        renderCalendar();
-        loadDataFromSheet();
-    };
+renderSchedule(10);
 </script>
 </body>
 </html>
